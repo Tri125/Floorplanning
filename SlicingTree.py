@@ -12,26 +12,60 @@ class SlicingTree:
 		rect = Rectangle(id, width, height)
 		self._rectangles.append(rect)
 		
-	def generateRandomInfix(self):
-		postfix = []
-		operand = len(self._rectangles)
+	def generateInfix(self, listOperand, listOperator):
+		NbOperand = len(self._rectangles)
 		expression = ""
 		operator = ["-", "|"]
+	
 		
-		for x in range (0, operand):
-			if (x != (operand) and x != 0):
-				expression += operator[x%2]		
-			
-			expression += self._rectangles[x].getId() 
-			
-			 
+		for x in range (0, NbOperand -1):
+			listOperator.append(operator[x%2])
+		
+		for x in range (0, NbOperand):
+			expression += listOperand[x]
+			if (len(listOperator) != x):
+				expression += listOperator[x]
 		print(expression)
+		return expression
 		
-	def permutations(self, infix):
-		pass
+	
+	def operator_perms(self, nbOperator):
+		operator = ["-", "|"]
+		listOperator = []
+		listOperatorPerm = []
+		for x in range (0, nbOperator):
+			listOperator.append(operator[0])
+		listOperatorPerm.append(listOperator)
 		
+		for x in range (0, 2**nbOperator)
+			
 		
+		print(listOperatorPerm)
 		
+
+	
+		
+	def SlicingPermutations(self):
+		operand = ""
+		permutations = []
+				
+		for x in self._rectangles:
+			operand += x.getId()
+
+		for x in self.all_perms(operand):
+			permutations.append(x)
+		
+		print(permutations)
+		
+	#http://code.activestate.com/recipes/252178/	
+	def all_perms(self, elements):
+		if len(elements) <=1:
+			yield elements
+		else:
+			for perm in self.all_perms(elements[1:]):
+				for i in range(len(elements)):
+					#nb elements[0:1] works in both string and list contexts
+					yield perm[:i] + elements[0:1] + perm[i:]
 		
 		
 objets = []
@@ -45,5 +79,7 @@ teste.addRectangle(objets[1])
 teste.addRectangle(objets[2])
 
 
-teste.generateRandomInfix()
+teste.SlicingPermutations()
+#teste.generateInfix()
+teste.operator_perms(2)
 		
