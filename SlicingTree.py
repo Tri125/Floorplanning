@@ -22,7 +22,7 @@ class SlicingTree:
 			for y in range (0, len(x)):
 				expression += x[y]
 				expressionInvertOp += x[y]
-				if (len(listOperator) != y):
+				if (y != len(x)-1):
 					expression += listOperator[0][y]
 					expressionInvertOp += listOperator[1][y]
 			listExpression.append(expression)
@@ -61,12 +61,11 @@ class SlicingTree:
 
 		for x in self.all_perms(operand):
 			permutations.append(x)
-		
 		listOperatorPerm = self.operator_perms(len(self._rectangles)-1)
-		
 		listInfixExpression = self.generateInfix(permutations, listOperatorPerm)
 		
-		print(listInfixExpression)
+		for x in listInfixExpression:
+			print(x)
 		
 	#http://code.activestate.com/recipes/252178/	
 	def all_perms(self, elements):
@@ -90,18 +89,6 @@ objets.append(("1", 5, 2))
 objets.append(("3", 5, 2))
 objets.append(("5", 5, 2))
 objets.append(("7", 5, 2))
-objets.append(("8", 5, 2))
-objets.append(("9", 5, 2))
-objets.append(("0", 5, 2))
-objets.append(("1", 5, 2))
-objets.append(("3", 5, 2))
-objets.append(("5", 5, 2))
-objets.append(("8", 5, 2))
-objets.append(("9", 5, 2))
-objets.append(("0", 5, 2))
-objets.append(("3", 5, 2))
-objets.append(("5", 5, 2))
-objets.append(("1", 5, 2))
 
 
 
@@ -111,22 +98,12 @@ teste.addRectangle(objets[0])
 teste.addRectangle(objets[1])
 teste.addRectangle(objets[2])
 teste.addRectangle(objets[3])
+teste.addRectangle(objets[0])
+teste.addRectangle(objets[1])
+teste.addRectangle(objets[2])
+teste.addRectangle(objets[3])
 teste.addRectangle(objets[4])
 teste.addRectangle(objets[5])
 teste.addRectangle(objets[6])
-teste.addRectangle(objets[7])
-teste.addRectangle(objets[8])
-teste.addRectangle(objets[9])
-teste.addRectangle(objets[10])
-teste.addRectangle(objets[11])
-teste.addRectangle(objets[12])
-teste.addRectangle(objets[13])
-teste.addRectangle(objets[14])
-teste.addRectangle(objets[15])
-teste.addRectangle(objets[16])
-teste.addRectangle(objets[17])
-teste.addRectangle(objets[18])
-
-
 teste.SlicingPermutations()
 		
