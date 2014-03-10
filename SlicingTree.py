@@ -90,6 +90,13 @@ class SlicingTree:
 			self.SwapMove(listPostfixExpression[0])
 	
 	
+	def SwapOperatorOperand(self, postfixExpression):
+		pass
+		
+		
+	def TestBallotingProperty(self, postfixExpression):
+		pass
+	
 	def SwapMove(self, postfixExpression):
 		indexOperand = []
 		operator = ["-", "|"]
