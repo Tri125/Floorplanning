@@ -109,9 +109,15 @@ class SlicingTree:
 				OperandCounter += 1
 			nbOperator[x] = OperatorCounter
 			nbOperand[x] = OperandCounter
+			
+			if(nbOperator[x] >= nbOperand[x]):
+				return False
 		print(postfix)
 		print(nbOperand)
 		print(nbOperator)
+		return True
+		
+		
 			
 		
 	
