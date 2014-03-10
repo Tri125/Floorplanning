@@ -94,8 +94,25 @@ class SlicingTree:
 		pass
 		
 		
-	def TestBallotingProperty(self, postfixExpression):
-		pass
+	def TestBallotingProperty(self):
+		postfix = "12H34H5HV"
+		operator = ["-", "|"]
+		nbOperand = [0]*len(postfix)
+		nbOperator = [0]*len(postfix)
+		OperandCounter = 0
+		OperatorCounter = 0
+		for x in range(0, len(postfix)):
+			if (postfix[x] is in operator):
+				OperatorCounter += 1
+				nbOperator[x] = OperatorCounter
+			else:
+				OperandCounter += 1
+				nbOperand[x] = OperandCounter
+		print(postfix)
+		print(nbOperand)
+		print(nbOperator)
+			
+		
 	
 	def SwapMove(self, postfixExpression):
 		indexOperand = []
@@ -178,5 +195,6 @@ teste.addRectangle(objets[4])
 teste.addRectangle(objets[5])
 
 
-teste.generateInitialSolution()
+#teste.generateInitialSolution()
+teste.TestBallotingProperty()
 		
