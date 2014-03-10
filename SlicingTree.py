@@ -96,18 +96,19 @@ class SlicingTree:
 		
 	def TestBallotingProperty(self):
 		postfix = "12H34H5HV"
-		operator = ["-", "|"]
+		#operator = ["-", "|"]
+		operator = ["H", "V"]
 		nbOperand = [0]*len(postfix)
 		nbOperator = [0]*len(postfix)
 		OperandCounter = 0
 		OperatorCounter = 0
 		for x in range(0, len(postfix)):
-			if (postfix[x] is in operator):
+			if (postfix[x] in operator):
 				OperatorCounter += 1
-				nbOperator[x] = OperatorCounter
 			else:
 				OperandCounter += 1
-				nbOperand[x] = OperandCounter
+			nbOperator[x] = OperatorCounter
+			nbOperand[x] = OperandCounter
 		print(postfix)
 		print(nbOperand)
 		print(nbOperator)
