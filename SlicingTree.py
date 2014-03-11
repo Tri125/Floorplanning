@@ -95,7 +95,7 @@ class SlicingTree:
 				indexOperand = []
 				operator = ["-", "|"]
 				swapList = []
-				print(postfixExpression)
+				#print(postfixExpression)
 				for x in range(0, len(postfixExpression)):
 					if (postfixExpression[x] in operator):
 						if x != 0 and postfixExpression[x-1] not in operator:
@@ -110,16 +110,16 @@ class SlicingTree:
 				tmp[one], tmp[second] = tmp[second], tmp[one]
 				postfixExpression = ''.join(tmp)
 				
-				print(postfixExpression)
+				if (not self.TestBallotingProperty(postfixExpression)):
+					print(postfixExpression)
 				#iter = re.finditer('(\w{1})([\-\|]{1})(\w{1})', postfixExpression)
 				#indices = [m.start(0) for m in iter]
 				#print(indices)
 				##print("{} {} {}".format(left, operator, right))
 				
-		def TestBallotingProperty(self):
-				postfix = "12H34H5HV"
-				#operator = ["-", "|"]
-				operator = ["H", "V"]
+		def TestBallotingProperty(self, postfix):
+				operator = ["-", "|"]
+				#operator = ["H", "V"]
 				nbOperand = [0]*len(postfix)
 				nbOperator = [0]*len(postfix)
 				OperandCounter = 0
@@ -134,9 +134,9 @@ class SlicingTree:
 						
 						if(nbOperator[x] >= nbOperand[x]):
 								return False
-				print(postfix)
-				print(nbOperand)
-				print(nbOperator)
+				#print(postfix)
+				#print(nbOperand)
+				#print(nbOperator)
 				return True
 				
 				
@@ -227,5 +227,6 @@ teste.addRectangle(objets[5])
 #teste.generateInitialSolution()
 #teste.TestBallotingProperty()
 #for x in range(0, 100000):
-teste.SwapOperatorOperand("12|4-5|3-")
+for x in range (0, 100):
+	teste.SwapOperatorOperand("12|4-5|3-")
 				
