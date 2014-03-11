@@ -9,7 +9,8 @@ class SlicingTree:
 				self._root = None
 				self._rectangles = []
 				self._permutations = []
-
+				self._dictionnary = {}
+				
 		def addRectangle(self, rect):
 				id, width, height = rect
 				rect = Rectangle(id, width, height)
@@ -116,7 +117,11 @@ class SlicingTree:
 				#indices = [m.start(0) for m in iter]
 				#print(indices)
 				##print("{} {} {}".format(left, operator, right))
-				
+
+		def AreaComputation(self, postfixExpression):
+			pass
+
+		
 		def TestBallotingProperty(self, postfix):
 				operator = ["-", "|"]
 				#operator = ["H", "V"]
@@ -177,7 +182,13 @@ class SlicingTree:
 				postfixExpression = ''.join(tmp)
 				
 				print(postfixExpression)
-				
+		
+		def StartFloorPlanSolver(self):
+			self._dictionnary = {rect.getId(): (rect.getWidth(), rect.getHeight()) for rect in self._rectangles}
+			print(self._dictionnary)
+			self.AreaComputation()
+			
+			
 		# def SlicingPermutations(self):
 				# operand = ""
 				# permutations = []
@@ -223,10 +234,11 @@ teste.addRectangle(objets[3])
 teste.addRectangle(objets[4])
 teste.addRectangle(objets[5])
 
+teste.StartFloorPlanSolver()
 
 #teste.generateInitialSolution()
 #teste.TestBallotingProperty()
 #for x in range(0, 100000):
-for x in range (0, 100):
-	teste.SwapOperatorOperand("12|4-5|3-")
+#for x in range (0, 100):
+	#teste.SwapOperatorOperand("12|4-5|3-")
 				
