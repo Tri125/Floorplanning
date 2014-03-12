@@ -2,7 +2,6 @@ from SlicingNode import SlicingNode
 from Rectangle import Rectangle
 from ArrayStack import ArrayStack
 import random
-import re
 
 class SlicingTree:
 		def __init__(self):
@@ -118,10 +117,46 @@ class SlicingTree:
 				#print(indices)
 				##print("{} {} {}".format(left, operator, right))
 
-		def AreaComputation(self, postfixExpression):
-			pass
-
-		
+		def AreaComputation(self, postfixExpression = "BACVHEDHV"):
+			stacky = ArrayStack()
+			operator = ["V","H"]
+			BestCandidate = 0
+			FlipNote = "{0:b}".format(0)
+			print(FlipNote)
+			for y in range(0, 2**len(self._rectangles)):
+				for x in range(0, len(postfixExpression)):
+					rectCounter = 0
+					currentChar = postfixExpression[x]
+					if (currentChar not in operator):
+						rect = self._dictionnary[currentChar]
+						if (FlipNote[len(FlipNote)-(rectCounter+1)] == 1):
+							print(len(FlipNote)-(rectCounter+1))
+							rect = rect[::-1] 
+						stacky.push(rect)
+						rectCounter += 1
+					else:
+						Rightchild = stacky.pop()
+						Leftchild = stacky.pop()
+						rightWidth, rightHeight = Rightchild
+						leftWidth, leftHeight =	Leftchild
+					
+						if (currentChar == operator[0]): #Vertical slice
+							stacky.push((rightWidth+leftWidth, (max(rightHeight,leftHeight))))
+						elif (currentChar == operator[1]): #Horizontal slice
+							stacky.push((max(rightWidth,leftWidth),rightHeight+leftHeight))
+						else:
+							print("Erreur AreaComputation. Invalid Operator in postfixExpression :" + postfixExpression + " " + postfixExpression[x])
+				#print(stacky)
+				width, height = stacky.pop()
+				area = width * height
+				if (area < BestCandidate or BestCandidate == 0):
+					BestCandidate = area
+				FlipNote = "{0:b}".format(y)
+			print("Best : " + str(BestCandidate))
+			print(FlipNote)
+			
+			
+			
 		def TestBallotingProperty(self, postfix):
 				operator = ["-", "|"]
 				#operator = ["H", "V"]
@@ -216,12 +251,11 @@ class SlicingTree:
 				
 				
 objets = []
-objets.append(("A", 2, 7))
-objets.append(("B", 5, 3))
-objets.append(("C", 5, 2))
-objets.append(("D", 5, 2))
-objets.append(("E", 5, 2))
-objets.append(("F", 5, 2))
+objets.append(("A", 20, 30))
+objets.append(("B", 40, 20))
+objets.append(("C", 20, 16))
+objets.append(("D", 60, 20))
+objets.append(("E", 30, 30))
 
 
 
@@ -232,7 +266,6 @@ teste.addRectangle(objets[1])
 teste.addRectangle(objets[2])
 teste.addRectangle(objets[3])
 teste.addRectangle(objets[4])
-teste.addRectangle(objets[5])
 
 teste.StartFloorPlanSolver()
 
@@ -241,4 +274,5 @@ teste.StartFloorPlanSolver()
 #for x in range(0, 100000):
 #for x in range (0, 100):
 	#teste.SwapOperatorOperand("12|4-5|3-")
+	
 				
