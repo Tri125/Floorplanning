@@ -67,7 +67,6 @@ class SlicingTree:
 					stack.push(prefixExpression[x])
 			while (not stack.is_empty()):
 						stringPostfix += stack.pop()   
-			print(stringPostfix)
 			return stringPostfix
 		
 		def operatorGeneration(self, nbOperator):
@@ -139,19 +138,17 @@ class SlicingTree:
 			#operator = ["V","H"]
 			operator = ["-", "|"]
 			BestCandidate = 0
-			RealNote = "{0:b}".format(0)
+			RealNote = ""
 			for y in range(0, 2**len(self._rectangles)):
 				rectCounter = 0
 				FlipNote = "{0:b}".format(y)
 				FlipNote = "0"* (len(self._rectangles)-len(FlipNote)) + FlipNote
-				print(FlipNote)
 				for x in range(0, len(postfixExpression)):
 					currentChar = postfixExpression[x]
 					if (currentChar not in operator):
 						rect = self._dictionnary[currentChar]
 						tmp = FlipNote[::-1]
 						if (tmp[rectCounter] == "1"):
-							#print("FLIPI")
 							rect = rect[::-1] 
 						stacky.push(rect)
 						rectCounter += 1
@@ -173,9 +170,16 @@ class SlicingTree:
 				#print("Area : " + str(area))
 				if (area < BestCandidate or BestCandidate == 0):
 					BestCandidate = area
-					RealNote = FlipNote
+					RealNote = FlipNote 
+			RectRotation = ""
+			for x in RealNote:
+				if (x == "1"):
+					RectRotation += "0"
+				elif x == "0":
+					RectRotation += "1"
+					
 			print("Best : " + str(BestCandidate))
-			print(RealNote)
+			print(RectRotation)
 			
 			
 			
@@ -240,11 +244,12 @@ class SlicingTree:
 				
 				print(postfixExpression)
 		
-		def StartFloorPlanSolver(self, prefixExpression = ""):
+		def StartFloorPlanSolver(self, prefixExpression):
 			self._dictionnary = {rect.getId(): (rect.getWidth(), rect.getHeight()) for rect in self._rectangles}
 			print(self._dictionnary)
-			#postfix = self.PrefixToPostFix(prefixExpression)
-			self.AreaComputation("AB-CD-E-|")
+			postfix = self.PrefixToPostFix(prefixExpression)
+			print(postfix)
+			self.AreaComputation(postfix)
 			
 			
 		# def SlicingPermutations(self):
@@ -274,11 +279,11 @@ class SlicingTree:
 				
 				
 objets = []
-objets.append(("A", 4, 6))
-objets.append(("B", 4, 4))
-objets.append(("C", 3, 4))
-objets.append(("D", 4, 4))
-objets.append(("E", 3, 4))
+objets.append(("A", 2, 29))
+objets.append(("B", 23, 3))
+objets.append(("C", 5, 19))
+objets.append(("D", 17, 7))
+objets.append(("E", 11, 13))
 
 
 
@@ -290,7 +295,7 @@ teste.addRectangle(objets[2])
 teste.addRectangle(objets[3])
 teste.addRectangle(objets[4])
 
-teste.StartFloorPlanSolver()
+teste.StartFloorPlanSolver("|E-A|D-BC")
 
 #teste.generateInitialSolution()
 #teste.TestBallotingProperty()
