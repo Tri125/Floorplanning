@@ -286,7 +286,7 @@ class SlicingTree:
 			
 		
 		
-		def ComputeUphillAverage(self, postfixExpression, P = 0.90, sigma = 0, r = 0.85, K = 20):
+		def ComputeUphillAverage(self, postfixExpression, K = 20):
 			previousExpression = postfixExpression
 			deltaAverage = 0
 			reject = 0
@@ -307,16 +307,18 @@ class SlicingTree:
 				else:
 					print("Erreur WongLiuFLoorplanning")
 					
-				deltaAverage += self.AreaComputation(postfixExpression) - self.AreaComputation(previousExpression)
+				deltaAverage += math.fabs(self.AreaComputation(postfixExpression) - self.AreaComputation(previousExpression))
 			deltaAverage = deltaAverage/K
 			return deltaAverage
 		
-		def WongLiuFloorplanning(self, postfixExpression, P = 0.90, sigma = 10, r = 0.85, K = 100):
+		def WongLiuFloorplanning(self, postfixExpression, P = 0.80, sigma = 10, r = 0.85, K = 100):
 			bestExpression = postfixExpression
 			previousExpression = postfixExpression
-			deltaAverage = self.ComputeUphillAverage(postfixExpression)
+			deltaAverage = self.ComputeUphillAverage(postfixExpression,K)
 			print("delta avg :" + str(deltaAverage))
-			temperature = (-deltaAverage)/math.log(P)
+			temperature = -deltaAverage/math.log(P)
+			print("delta " + str(deltaAverage))
+			print("starting tmp " + str(temperature))
 			loop = True
 			while (loop):
 				reject = 0
@@ -385,19 +387,27 @@ class SlicingTree:
 				
 				
 objets = []
-objets.append(("A", 1, 1))
-objets.append(("B", 2, 1))
-objets.append(("C", 2, 3))
-objets.append(("D", 4, 5))
+objets.append(("A", 2, 37))
+objets.append(("B", 31, 3))
+objets.append(("C", 5, 29))
+objets.append(("D", 23, 7))
+objets.append(("E", 11, 19))
+objets.append(("F", 17, 13))
+
+# objets.append(("A", 2, 29))
+# objets.append(("B", 23, 3))
+# objets.append(("C", 5, 19))
+# objets.append(("D", 17, 7))
+# objets.append(("E", 11, 13))
 
 
 teste = SlicingTree()
 teste.addRectangle(objets[0])
 teste.addRectangle(objets[1])
 teste.addRectangle(objets[2])
-#teste.addRectangle(objets[3])
-#teste.addRectangle(objets[4])
-#teste.addRectangle(objets[5])
+teste.addRectangle(objets[3])
+teste.addRectangle(objets[4])
+teste.addRectangle(objets[5])
 
 teste.StartFloorPlanSolver()
 #teste.PostFixToPrefix("ACB-D|-E|")
