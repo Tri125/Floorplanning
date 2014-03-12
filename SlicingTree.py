@@ -54,7 +54,7 @@ class SlicingTree:
 						
 				return stringPostfix
 				
-		def PrefixToPostFix(self, prefixExpression):
+		def PrefixToPostfix(self, prefixExpression):
 			stack = ArrayStack()
 			operator = ["-", "|"]
 			#operator = ["+", "-"]
@@ -72,7 +72,7 @@ class SlicingTree:
 			return stringPostfix
 			
 			
-		def PostFixToPrefix(self, postfixExpression):
+		def PostfixToPrefix(self, postfixExpression):
 			stack = ArrayStack()
 			operator = ["-", "|"]
 			#operator = ["+", "-"]
@@ -279,12 +279,18 @@ class SlicingTree:
 			print(self._dictionnary)
 			postfix = self.generateInitialSolution()
 			bestExpression = self.WongLiuFloorplanning(postfix)
-			prefixResult = self.PostFixToPrefix(bestExpression)
+			prefixResult = self.PostfixToPrefix(bestExpression)
 			print("Aire minimal " + str(self.AreaComputation(bestExpression)))
 			print("Postfix " + bestExpression)
 			print("Prefix " + prefixResult)
-			
-		
+			#print(self.AreaComputation(self.PrefixToPostfix("-|F-|DEA|BC")))
+			answer = self.PrefixToPostfix("|-F|-DEA-CB")
+			d = {}
+			for x in self.all_perms(postfix):
+				d[x] = 0
+			if answer in d:
+				print("YES")
+			print(len(d))
 		
 		def ComputeUphillAverage(self, postfixExpression, K = 20):
 			previousExpression = postfixExpression
@@ -310,8 +316,19 @@ class SlicingTree:
 				deltaAverage += math.fabs(self.AreaComputation(postfixExpression) - self.AreaComputation(previousExpression))
 			deltaAverage = deltaAverage/K
 			return deltaAverage
-		
-		def WongLiuFloorplanning(self, postfixExpression, P = 0.80, sigma = 10, r = 0.85, K = 100):
+			
+		def ChildParentOperatorTest(self, postfixExpression):
+			operator = ["-", "|"]
+			prefix = self.PostfixToPrefix(postfixExpression)
+			for x in range(0, len(prefix)):
+				currentChar = prefix[x]
+				if (currentChar in operator):
+					if (len(prefix) > x+1 and currentChar == prefix[x+1]):
+						return False
+			return True
+			
+			
+		def WongLiuFloorplanning(self, postfixExpression, P = 0.70, sigma = 1, r = 0.85, K = 100):
 			bestExpression = postfixExpression
 			previousExpression = postfixExpression
 			deltaAverage = self.ComputeUphillAverage(postfixExpression,K)
@@ -330,7 +347,7 @@ class SlicingTree:
 						while(True):
 							tmp = postfixExpression
 							tmp = self.SwapOperatorOperand(tmp)
-							if self.TestBallotingProperty(tmp):
+							if self.TestBallotingProperty(tmp) and self.ChildParentOperatorTest(tmp):
 								postfixExpression = tmp
 								break
 						
@@ -345,13 +362,13 @@ class SlicingTree:
 						if self.AreaComputation(postfixExpression) < self.AreaComputation(bestExpression):
 							
 							bestExpression = postfixExpression
-							print("Best" + str(self.AreaComputation(bestExpression)))
+							print("Best Current Area :" + str(self.AreaComputation(bestExpression)))
 					else:
 						reject += 1
 				temperature = r*temperature
 				print("Computing...")
-				if (reject/K > 0.95 or temperature < sigma):
-					loop = False
+				#if (reject/K > 0.95 or temperature < sigma):
+					#loop = False
 			return bestExpression
 			
 		# def SlicingPermutations(self):
@@ -370,14 +387,14 @@ class SlicingTree:
 						# print(x)
 				
 		#http://code.activestate.com/recipes/252178/    
-		# def all_perms(self, elements):
-				# if len(elements) <=1:
-						# yield elements
-				# else:
-						# for perm in self.all_perms(elements[1:]):
-								# for i in range(len(elements)):
+		def all_perms(self, elements):
+				if len(elements) <=1:
+						yield elements
+				else:
+						for perm in self.all_perms(elements[1:]):
+								for i in range(len(elements)):
 										#nb elements[0:1] works in both string and list contexts
-										# yield perm[:i] + elements[0:1] + perm[i:]
+										yield perm[:i] + elements[0:1] + perm[i:]
 				
 				
 objets = []
@@ -402,8 +419,12 @@ teste.addRectangle(objets[2])
 teste.addRectangle(objets[3])
 teste.addRectangle(objets[4])
 teste.addRectangle(objets[5])
-
+#print(teste.ChildParentOperatorTest("DBC-|F-T-"))
 teste.StartFloorPlanSolver()
+
+
+	
+
 
 #teste.TestBallotingProperty()
 	
