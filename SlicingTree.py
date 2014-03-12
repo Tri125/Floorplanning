@@ -349,7 +349,7 @@ class SlicingTree:
 					else:
 						reject += 1
 				temperature = r*temperature
-				print(reject)
+				print("Computing...")
 				if (reject/K > 0.95 or temperature < sigma):
 					loop = False
 			return bestExpression
