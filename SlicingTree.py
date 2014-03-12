@@ -73,7 +73,6 @@ class SlicingTree:
 			
 			
 		def PostFixToPrefix(self, postfixExpression):
-			print(postfixExpression)
 			stack = ArrayStack()
 			operator = ["-", "|"]
 			#operator = ["+", "-"]
@@ -87,7 +86,6 @@ class SlicingTree:
 					stack.push(postfixExpression[x])
 			while (not stack.is_empty()):
 						stringPrefix += stack.pop()
-			print(stringPrefix)
 			return stringPrefix
 		
 		def operatorGeneration(self, nbOperator):
@@ -282,6 +280,8 @@ class SlicingTree:
 			postfix = self.generateInitialSolution()
 			bestExpression = self.WongLiuFloorplanning(postfix)
 			prefixResult = self.PostFixToPrefix(bestExpression)
+			print("Aire minimal " + str(self.AreaComputation(bestExpression)))
+			print("Postfix " + bestExpression)
 			print("Prefix " + prefixResult)
 			
 		
@@ -315,10 +315,10 @@ class SlicingTree:
 			bestExpression = postfixExpression
 			previousExpression = postfixExpression
 			deltaAverage = self.ComputeUphillAverage(postfixExpression,K)
-			print("delta avg :" + str(deltaAverage))
+			#print("delta avg :" + str(deltaAverage))
 			temperature = -deltaAverage/math.log(P)
-			print("delta " + str(deltaAverage))
-			print("starting tmp " + str(temperature))
+			#print("delta " + str(deltaAverage))
+			#print("starting tmp " + str(temperature))
 			loop = True
 			while (loop):
 				reject = 0
@@ -351,13 +351,7 @@ class SlicingTree:
 				temperature = r*temperature
 				print(reject)
 				if (reject/K > 0.95 or temperature < sigma):
-				#if (reject/K > 0.95):
-					print("Reject : " + str(reject))
-					print(reject/K)
-					print("Temp: " + str(temperature))
-					print("Sigma " + str(sigma))
 					loop = False
-			print(self.AreaComputation(bestExpression))
 			return bestExpression
 			
 		# def SlicingPermutations(self):
@@ -410,12 +404,7 @@ teste.addRectangle(objets[4])
 teste.addRectangle(objets[5])
 
 teste.StartFloorPlanSolver()
-#teste.PostFixToPrefix("ACB-D|-E|")
 
-#teste.generateInitialSolution()
 #teste.TestBallotingProperty()
-#for x in range(0, 100000):
-#for x in range (0, 100):
-	#teste.SwapOperatorOperand("12|4-5|3-")
 	
 				
