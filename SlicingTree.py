@@ -315,7 +315,8 @@ class SlicingTree:
 			bestExpression = postfixExpression
 			previousExpression = postfixExpression
 			deltaAverage = self.ComputeUphillAverage(postfixExpression)
-			temperature = -deltaAverage/math.log(P)
+			print("delta avg :" + str(deltaAverage))
+			temperature = (-deltaAverage)/math.log(P)
 			loop = True
 			while (loop):
 				reject = 0
@@ -340,11 +341,15 @@ class SlicingTree:
 					if (deltaCost <= 0 or random.randint(0,1) < math.e - deltaCost/temperature):
 						previousExpression = postfixExpression
 						if self.AreaComputation(postfixExpression) < self.AreaComputation(bestExpression):
+							
 							bestExpression = postfixExpression
+							print("Best" + str(self.AreaComputation(bestExpression)))
 					else:
 						reject += 1
 				temperature = r*temperature
-				if (reject/K > 0.95 or temperature < sigma):
+				print(reject)
+				#if (reject/K > 0.95 or temperature < sigma):
+				if (reject/K > 0.95):
 					print("Reject : " + str(reject))
 					print(reject/K)
 					print("Temp: " + str(temperature))
@@ -380,13 +385,12 @@ class SlicingTree:
 				
 				
 objets = []
-objets.append(("A", 2, 29))
-objets.append(("B", 23, 3))
-objets.append(("C", 5, 19))
-objets.append(("D", 17, 7))
-objets.append(("E", 11, 13))
-
-
+objets.append(("A", 2, 37))
+objets.append(("B", 31, 3))
+objets.append(("C", 5, 29))
+objets.append(("D", 23, 7))
+objets.append(("E", 11, 19))
+objets.append(("F", 17, 13))
 
 
 teste = SlicingTree()
@@ -395,6 +399,7 @@ teste.addRectangle(objets[1])
 teste.addRectangle(objets[2])
 teste.addRectangle(objets[3])
 teste.addRectangle(objets[4])
+teste.addRectangle(objets[5])
 
 teste.StartFloorPlanSolver()
 #teste.PostFixToPrefix("ACB-D|-E|")
