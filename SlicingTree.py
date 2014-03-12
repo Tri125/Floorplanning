@@ -1,6 +1,7 @@
 from SlicingNode import SlicingNode
 from Rectangle import Rectangle
 from ArrayStack import ArrayStack
+from collections import OrderedDict
 import random
 
 class SlicingTree:
@@ -138,17 +139,23 @@ class SlicingTree:
 			#operator = ["V","H"]
 			operator = ["-", "|"]
 			BestCandidate = 0
+			RealDict = {}
 			RealNote = ""
 			for y in range(0, 2**len(self._rectangles)):
 				rectCounter = 0
+				flipDict = {}
 				FlipNote = "{0:b}".format(y)
 				FlipNote = "0"* (len(self._rectangles)-len(FlipNote)) + FlipNote
 				for x in range(0, len(postfixExpression)):
 					currentChar = postfixExpression[x]
 					if (currentChar not in operator):
 						rect = self._dictionnary[currentChar]
-						tmp = FlipNote[::-1]
-						if (tmp[rectCounter] == "1"):
+						flipDict[currentChar] = "0"
+						if (FlipNote[rectCounter] == "1"):
+							#print(rectCounter)
+							#print(FlipNote)
+							#print("Is flipping " + currentChar)
+							flipDict[currentChar] = "1"
 							rect = rect[::-1] 
 						stacky.push(rect)
 						rectCounter += 1
@@ -169,16 +176,19 @@ class SlicingTree:
 				area = width * height
 				#print("Area : " + str(area))
 				if (area < BestCandidate or BestCandidate == 0):
+					RealDict = flipDict
 					BestCandidate = area
 					RealNote = FlipNote 
 			RectRotation = ""
-			for x in RealNote:
-				if (x == "1"):
-					RectRotation += "0"
-				elif x == "0":
-					RectRotation += "1"
 					
 			print("Best : " + str(BestCandidate))
+			ordered = OrderedDict(sorted(RealDict.items(), key=lambda t: t[0]))
+			while(len(ordered) != 0):
+				key, value = ordered.popitem(False)
+				if(value == "1"):
+					RectRotation += "0"
+				elif (value =="0"):
+					RectRotation += "1"
 			print(RectRotation)
 			
 			
@@ -295,7 +305,7 @@ teste.addRectangle(objets[2])
 teste.addRectangle(objets[3])
 teste.addRectangle(objets[4])
 
-teste.StartFloorPlanSolver("|E-A|D-BC")
+teste.StartFloorPlanSolver("-|A-|CBDE")
 
 #teste.generateInitialSolution()
 #teste.TestBallotingProperty()
