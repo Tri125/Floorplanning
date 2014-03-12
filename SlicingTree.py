@@ -263,14 +263,37 @@ class SlicingTree:
 			print(postfix)
 			self.WongLiuFloorplanning(postfix)
 			#self.AreaComputation(postfix)
-			
-		def WongLiuFloorplanning(self,postfixExpression):
-			P = 0.90
-			K = 1000
-			r = 0.85
+		
+		
+		def ComputerUphillAverage(self, postfixExpression, P = 0.90, sigma = 0, r = 0.85, K = 1000):
+			previousExpression = postfixExpression
+			deltaAverage = 0
+			reject = 0
+			for ite in range(0,K):
+				OperationChoice = random.randint(1,2)
+				if (OperationChoice == 1):
+					postfixExpression = self.SwapOperand(postfixExpression)
+				elif (OperationChoice == 2):
+					done = False
+					while(not done):
+						tmp = postfixExpression
+						tmp = SwapOperatorOperand(tmp)
+						if TestBallotingProperty(tmp):
+							done = True
+							postfixExpression = tmp
+						
+							
+				else:
+					print("Erreur WongLiuFLoorplanning")
+					
+				deltaCost += self.AreaComputation(postfixExpression) - self.AreaComputation(previousExpression)
+			deltaCost = deltaCost/K
+			return deltaCost
+		
+		def WongLiuFloorplanning(self, postfixExpression, P = 0.90, sigma = 0, r = 0.85, K = 1000):
 			bestExpression = postfixExpression
 			previousExpression = postfixExpression
-			deltaAverage = self._ComputerUphillAverage()
+			deltaAverage = self._ComputerUphillAverage(0.90,0,0.85,1000)
 			temperature = -deltaAverage/log(P)
 			loop = True
 			while (loop):
@@ -280,13 +303,12 @@ class SlicingTree:
 					if (OperationChoice == 1):
 						postfixExpression = self.SwapOperand(postfixExpression)
 					elif (OperationChoice == 2):
-						done = False
-						while(not done):
-							 tmp = postfixExpression
-							 tmp = SwapOperatorOperand(tmp)
-							 if(TestBallotingProperty(tmp)):
-								done = True
+						while(True):
+							tmp = postfixExpression
+							tmp = SwapOperatorOperand(tmp)
+							if TestBallotingProperty(tmp):
 								postfixExpression = tmp
+								break
 						
 							
 					else:
@@ -294,14 +316,14 @@ class SlicingTree:
 					
 					deltaCost = self.AreaComputation(postfixExpression) - self.AreaComputation(previousExpression)
 					
-					if (deltaCost <= 0 or Random < e- deltaCost/Temperature):
+					if (deltaCost <= 0 or random < math.e - deltaCost/Temperature):
 						previousExpression = postfixExpression
 						if self.AreaComputation(postfixExpression) < self.AreaComputation(bestExpression):
 							bestExpression = postfixExpression
 					else:
 						reject += 1
 				Temperature = r*Temperature
-				if (reject/K > 0.95 or Temperature < sigma):
+				if (reject/K > 0.95 or temperature < sigma):
 					loop = False
 				
 			
