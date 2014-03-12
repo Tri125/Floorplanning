@@ -3,6 +3,7 @@ from Rectangle import Rectangle
 from ArrayStack import ArrayStack
 from collections import OrderedDict
 import random
+import math
 
 class SlicingTree:
 		def __init__(self):
@@ -69,6 +70,25 @@ class SlicingTree:
 			while (not stack.is_empty()):
 						stringPostfix += stack.pop()   
 			return stringPostfix
+			
+			
+		def PostFixToPrefix(self, postfixExpression):
+			print(postfixExpression)
+			stack = ArrayStack()
+			operator = ["-", "|"]
+			#operator = ["+", "-"]
+			stringPrefix = ""
+			for x in range(0, len(postfixExpression)):
+				if (postfixExpression[x] in operator):
+					second = stack.pop()
+					one = stack.pop()
+					stack.push(postfixExpression[x]+one+second)
+				else:
+					stack.push(postfixExpression[x])
+			while (not stack.is_empty()):
+						stringPrefix += stack.pop()
+			print(stringPrefix)
+			return stringPrefix
 		
 		def operatorGeneration(self, nbOperator):
 				operator = ["-", "|"]
@@ -105,7 +125,7 @@ class SlicingTree:
 				print(listPostfixExpression)
 				
 				#Parce que le deuxieme dans la liste est avec les operateurs inverse
-				return self.SwapMove(listPostfixExpression[0])
+				return listPostfixExpression[0]
 		
 		
 		def SwapOperatorOperand(self, postfixExpression):
@@ -127,7 +147,7 @@ class SlicingTree:
 				tmp[one], tmp[second] = tmp[second], tmp[one]
 				postfixExpression = ''.join(tmp)
 				
-				print(postfixExpression)
+				#print(postfixExpression)
 				return postfixExpression
 				#iter = re.finditer('(\w{1})([\-\|]{1})(\w{1})', postfixExpression)
 				#indices = [m.start(0) for m in iter]
@@ -181,7 +201,7 @@ class SlicingTree:
 					RealNote = FlipNote 
 			RectRotation = ""
 					
-			print("Best : " + str(BestCandidate))
+			#print("Best : " + str(BestCandidate))
 			ordered = OrderedDict(sorted(RealDict.items(), key=lambda t: t[0]))
 			while(len(ordered) != 0):
 				key, value = ordered.popitem(False)
@@ -189,7 +209,7 @@ class SlicingTree:
 					RectRotation += "0"
 				elif (value =="0"):
 					RectRotation += "1"
-			print(RectRotation)
+			#print(RectRotation)
 			return BestCandidate
 			
 			
@@ -259,13 +279,16 @@ class SlicingTree:
 		def StartFloorPlanSolver(self):
 			self._dictionnary = {rect.getId(): (rect.getWidth(), rect.getHeight()) for rect in self._rectangles}
 			print(self._dictionnary)
-			postfix = generateInitialSolution()
+			postfix = self.generateInitialSolution()
 			print(postfix)
-			self.WongLiuFloorplanning(postfix)
-			#self.AreaComputation(postfix)
+			bestExpression = self.WongLiuFloorplanning(postfix)
+			print(bestExpression)
+			prefixResult = self.PostFixToPrefix(bestExpression)
+			print("Prefix " + prefixResult)
+			
 		
 		
-		def ComputerUphillAverage(self, postfixExpression, P = 0.90, sigma = 0, r = 0.85, K = 1000):
+		def ComputeUphillAverage(self, postfixExpression, P = 0.90, sigma = 0, r = 0.85, K = 20):
 			previousExpression = postfixExpression
 			deltaAverage = 0
 			reject = 0
@@ -277,8 +300,8 @@ class SlicingTree:
 					done = False
 					while(not done):
 						tmp = postfixExpression
-						tmp = SwapOperatorOperand(tmp)
-						if TestBallotingProperty(tmp):
+						tmp = self.SwapOperatorOperand(tmp)
+						if self.TestBallotingProperty(tmp):
 							done = True
 							postfixExpression = tmp
 						
@@ -286,15 +309,15 @@ class SlicingTree:
 				else:
 					print("Erreur WongLiuFLoorplanning")
 					
-				deltaCost += self.AreaComputation(postfixExpression) - self.AreaComputation(previousExpression)
-			deltaCost = deltaCost/K
-			return deltaCost
+				deltaAverage += self.AreaComputation(postfixExpression) - self.AreaComputation(previousExpression)
+			deltaAverage = deltaAverage/K
+			return deltaAverage
 		
-		def WongLiuFloorplanning(self, postfixExpression, P = 0.90, sigma = 0, r = 0.85, K = 1000):
+		def WongLiuFloorplanning(self, postfixExpression, P = 0.90, sigma = 0, r = 0.85, K = 300):
 			bestExpression = postfixExpression
 			previousExpression = postfixExpression
-			deltaAverage = self._ComputerUphillAverage(0.90,0,0.85,1000)
-			temperature = -deltaAverage/log(P)
+			deltaAverage = self.ComputeUphillAverage(postfixExpression)
+			temperature = -deltaAverage/math.log(P)
 			loop = True
 			while (loop):
 				reject = 0
@@ -305,8 +328,8 @@ class SlicingTree:
 					elif (OperationChoice == 2):
 						while(True):
 							tmp = postfixExpression
-							tmp = SwapOperatorOperand(tmp)
-							if TestBallotingProperty(tmp):
+							tmp = self.SwapOperatorOperand(tmp)
+							if self.TestBallotingProperty(tmp):
 								postfixExpression = tmp
 								break
 						
@@ -316,17 +339,19 @@ class SlicingTree:
 					
 					deltaCost = self.AreaComputation(postfixExpression) - self.AreaComputation(previousExpression)
 					
-					if (deltaCost <= 0 or random < math.e - deltaCost/Temperature):
+					if (deltaCost <= 0 or random.randint(0,1) < math.e - deltaCost/temperature):
 						previousExpression = postfixExpression
 						if self.AreaComputation(postfixExpression) < self.AreaComputation(bestExpression):
 							bestExpression = postfixExpression
+							print("Best : " + bestExpression)
+							print(self.AreaComputation(bestExpression))
 					else:
 						reject += 1
-				Temperature = r*Temperature
+				temperature = r*temperature
 				if (reject/K > 0.95 or temperature < sigma):
 					loop = False
 				
-			
+			return bestExpression
 			
 		# def SlicingPermutations(self):
 				# operand = ""
@@ -369,9 +394,9 @@ teste.addRectangle(objets[0])
 teste.addRectangle(objets[1])
 teste.addRectangle(objets[2])
 teste.addRectangle(objets[3])
-teste.addRectangle(objets[4])
 
-#teste.StartFloorPlanSolver("-|A-|CBDE")
+#teste.StartFloorPlanSolver()
+teste.PostFixToPrefix("ACB-D|-E|")
 
 #teste.generateInitialSolution()
 #teste.TestBallotingProperty()
