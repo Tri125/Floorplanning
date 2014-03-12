@@ -52,6 +52,23 @@ class SlicingTree:
 						
 				return stringPostfix
 				
+		def PrefixToPostFix(self, prefixExpression):
+			stack = ArrayStack()
+			operator = ["-", "|"]
+			#operator = ["+", "-"]
+			stringPostfix = ""
+			prefixExpression = prefixExpression[::-1]
+			for x in range(0, len(prefixExpression)):
+				if (prefixExpression[x] in operator):
+					one = stack.pop()
+					second = stack.pop()
+					stack.push(one+second+prefixExpression[x])
+				else:
+					stack.push(prefixExpression[x])
+			while (not stack.is_empty()):
+						stringPostfix += stack.pop()   
+			print(stringPostfix)
+			return stringPostfix
 		
 		def operatorGeneration(self, nbOperator):
 				operator = ["-", "|"]
@@ -117,20 +134,21 @@ class SlicingTree:
 				#print(indices)
 				##print("{} {} {}".format(left, operator, right))
 
-		def AreaComputation(self, postfixExpression = "BACVHEDHV"):
+		def AreaComputation(self, postfixExpression):
 			stacky = ArrayStack()
-			operator = ["V","H"]
+			#operator = ["V","H"]
+			operator = ["-", "|"]
 			BestCandidate = 0
-			FlipNote = "{0:b}".format(0)
-			print(FlipNote)
+			RealNote = "{0:b}".format(0)
 			for y in range(0, 2**len(self._rectangles)):
+				FlipNote = "{0:b}".format(y)
 				for x in range(0, len(postfixExpression)):
 					rectCounter = 0
 					currentChar = postfixExpression[x]
 					if (currentChar not in operator):
 						rect = self._dictionnary[currentChar]
-						if (FlipNote[len(FlipNote)-(rectCounter+1)] == 1):
-							print(len(FlipNote)-(rectCounter+1))
+						if (FlipNote[1:] == "1"):
+							print("FLIPI")
 							rect = rect[::-1] 
 						stacky.push(rect)
 						rectCounter += 1
@@ -149,11 +167,13 @@ class SlicingTree:
 				#print(stacky)
 				width, height = stacky.pop()
 				area = width * height
+				#print("Area : " + str(area))
 				if (area < BestCandidate or BestCandidate == 0):
 					BestCandidate = area
-				FlipNote = "{0:b}".format(y)
+					RealNote = "{0:b}".format(y)
+				print(FlipNote)
 			print("Best : " + str(BestCandidate))
-			print(FlipNote)
+			print(RealNote)
 			
 			
 			
@@ -218,10 +238,11 @@ class SlicingTree:
 				
 				print(postfixExpression)
 		
-		def StartFloorPlanSolver(self):
+		def StartFloorPlanSolver(self, prefixExpression = ""):
 			self._dictionnary = {rect.getId(): (rect.getWidth(), rect.getHeight()) for rect in self._rectangles}
 			print(self._dictionnary)
-			self.AreaComputation()
+			#postfix = self.PrefixToPostFix(prefixExpression)
+			self.AreaComputation("AB-CD-E-|")
 			
 			
 		# def SlicingPermutations(self):
@@ -251,11 +272,11 @@ class SlicingTree:
 				
 				
 objets = []
-objets.append(("A", 20, 30))
-objets.append(("B", 40, 20))
-objets.append(("C", 20, 16))
-objets.append(("D", 60, 20))
-objets.append(("E", 30, 30))
+objets.append(("A", 4, 6))
+objets.append(("B", 4, 4))
+objets.append(("C", 3, 4))
+objets.append(("D", 4, 4))
+objets.append(("E", 3, 4))
 
 
 
