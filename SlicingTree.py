@@ -278,19 +278,23 @@ class SlicingTree:
 			self._dictionnary = {rect.getId(): (rect.getWidth(), rect.getHeight()) for rect in self._rectangles}
 			print(self._dictionnary)
 			postfix = self.generateInitialSolution()
-			bestExpression = self.WongLiuFloorplanning(postfix)
-			prefixResult = self.PostfixToPrefix(bestExpression)
-			print("Aire minimal " + str(self.AreaComputation(bestExpression)))
-			print("Postfix " + bestExpression)
-			print("Prefix " + prefixResult)
+			#bestExpression = self.WongLiuFloorplanning(postfix)
+			
+			allPerms = {}
+			for x in self.all_ALlowedPerms(postfix):
+				allPerms[x] = 0
+			
+			#prefixResult = self.PostfixToPrefix(bestExpression)
+			#print("Aire minimal " + str(self.AreaComputation(bestExpression)))
+			#print("Postfix " + bestExpression)
+			#print("Prefix " + prefixResult)
 			#print(self.AreaComputation(self.PrefixToPostfix("-|F-|DEA|BC")))
-			answer = self.PrefixToPostfix("|-F|-DEA-CB")
-			d = {}
-			for x in self.all_perms(postfix):
-				d[x] = 0
-			if answer in d:
-				print("YES")
-			print(len(d))
+			#answer = self.PrefixToPostfix("|-F|-DEA-CB")
+
+			#if answer in allPerms:
+			print(len(allPerms))
+			#for key, value in allPerms:
+				#print (key)
 		
 		def ComputeUphillAverage(self, postfixExpression, K = 20):
 			previousExpression = postfixExpression
@@ -395,6 +399,19 @@ class SlicingTree:
 								for i in range(len(elements)):
 										#nb elements[0:1] works in both string and list contexts
 										yield perm[:i] + elements[0:1] + perm[i:]
+										
+										
+										
+		def all_ALlowedPerms(self, elements):
+				if len(elements) <=1:
+						yield elements
+				else:
+						for perm in self.all_perms(elements[1:]):
+								for i in range(len(elements)):
+										#nb elements[0:1] works in both string and list contexts
+										tmp =  perm[:i] + elements[0:1] + perm[i:]
+										if self.TestBallotingProperty(tmp) and self.ChildParentOperatorTest(tmp):
+											yield tmp
 				
 				
 objets = []
