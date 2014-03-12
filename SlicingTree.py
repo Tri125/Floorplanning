@@ -141,14 +141,17 @@ class SlicingTree:
 			BestCandidate = 0
 			RealNote = "{0:b}".format(0)
 			for y in range(0, 2**len(self._rectangles)):
+				rectCounter = 0
 				FlipNote = "{0:b}".format(y)
+				FlipNote = "0"* (len(self._rectangles)-len(FlipNote)) + FlipNote
+				print(FlipNote)
 				for x in range(0, len(postfixExpression)):
-					rectCounter = 0
 					currentChar = postfixExpression[x]
 					if (currentChar not in operator):
 						rect = self._dictionnary[currentChar]
-						if (FlipNote[1:] == "1"):
-							print("FLIPI")
+						tmp = FlipNote[::-1]
+						if (tmp[rectCounter] == "1"):
+							#print("FLIPI")
 							rect = rect[::-1] 
 						stacky.push(rect)
 						rectCounter += 1
@@ -170,8 +173,7 @@ class SlicingTree:
 				#print("Area : " + str(area))
 				if (area < BestCandidate or BestCandidate == 0):
 					BestCandidate = area
-					RealNote = "{0:b}".format(y)
-				print(FlipNote)
+					RealNote = FlipNote
 			print("Best : " + str(BestCandidate))
 			print(RealNote)
 			
