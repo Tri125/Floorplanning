@@ -280,9 +280,7 @@ class SlicingTree:
 			self._dictionnary = {rect.getId(): (rect.getWidth(), rect.getHeight()) for rect in self._rectangles}
 			print(self._dictionnary)
 			postfix = self.generateInitialSolution()
-			print(postfix)
 			bestExpression = self.WongLiuFloorplanning(postfix)
-			print(bestExpression)
 			prefixResult = self.PostFixToPrefix(bestExpression)
 			print("Prefix " + prefixResult)
 			
@@ -313,7 +311,7 @@ class SlicingTree:
 			deltaAverage = deltaAverage/K
 			return deltaAverage
 		
-		def WongLiuFloorplanning(self, postfixExpression, P = 0.90, sigma = 0, r = 0.85, K = 300):
+		def WongLiuFloorplanning(self, postfixExpression, P = 0.90, sigma = 10, r = 0.85, K = 100):
 			bestExpression = postfixExpression
 			previousExpression = postfixExpression
 			deltaAverage = self.ComputeUphillAverage(postfixExpression)
@@ -343,14 +341,16 @@ class SlicingTree:
 						previousExpression = postfixExpression
 						if self.AreaComputation(postfixExpression) < self.AreaComputation(bestExpression):
 							bestExpression = postfixExpression
-							print("Best : " + bestExpression)
-							print(self.AreaComputation(bestExpression))
 					else:
 						reject += 1
 				temperature = r*temperature
 				if (reject/K > 0.95 or temperature < sigma):
+					print("Reject : " + str(reject))
+					print(reject/K)
+					print("Temp: " + str(temperature))
+					print("Sigma " + str(sigma))
 					loop = False
-				
+			print(self.AreaComputation(bestExpression))
 			return bestExpression
 			
 		# def SlicingPermutations(self):
@@ -394,9 +394,10 @@ teste.addRectangle(objets[0])
 teste.addRectangle(objets[1])
 teste.addRectangle(objets[2])
 teste.addRectangle(objets[3])
+teste.addRectangle(objets[4])
 
-#teste.StartFloorPlanSolver()
-teste.PostFixToPrefix("ACB-D|-E|")
+teste.StartFloorPlanSolver()
+#teste.PostFixToPrefix("ACB-D|-E|")
 
 #teste.generateInitialSolution()
 #teste.TestBallotingProperty()
