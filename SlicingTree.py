@@ -348,8 +348,8 @@ class SlicingTree:
 						reject += 1
 				temperature = r*temperature
 				print(reject)
-				#if (reject/K > 0.95 or temperature < sigma):
-				if (reject/K > 0.95):
+				if (reject/K > 0.95 or temperature < sigma):
+				#if (reject/K > 0.95):
 					print("Reject : " + str(reject))
 					print(reject/K)
 					print("Temp: " + str(temperature))
@@ -385,21 +385,19 @@ class SlicingTree:
 				
 				
 objets = []
-objets.append(("A", 2, 37))
-objets.append(("B", 31, 3))
-objets.append(("C", 5, 29))
-objets.append(("D", 23, 7))
-objets.append(("E", 11, 19))
-objets.append(("F", 17, 13))
+objets.append(("A", 1, 1))
+objets.append(("B", 2, 1))
+objets.append(("C", 2, 3))
+objets.append(("D", 4, 5))
 
 
 teste = SlicingTree()
 teste.addRectangle(objets[0])
 teste.addRectangle(objets[1])
 teste.addRectangle(objets[2])
-teste.addRectangle(objets[3])
-teste.addRectangle(objets[4])
-teste.addRectangle(objets[5])
+#teste.addRectangle(objets[3])
+#teste.addRectangle(objets[4])
+#teste.addRectangle(objets[5])
 
 teste.StartFloorPlanSolver()
 #teste.PostFixToPrefix("ACB-D|-E|")
