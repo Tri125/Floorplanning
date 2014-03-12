@@ -104,8 +104,8 @@ class SlicingTree:
 				print(listInfixExpression)
 				print(listPostfixExpression)
 				
-				for x in range (0, 100000):
-						self.SwapMove(listPostfixExpression[0])
+				#Parce que le deuxieme dans la liste est avec les operateurs inverse
+				return self.SwapMove(listPostfixExpression[0])
 		
 		
 		def SwapOperatorOperand(self, postfixExpression):
@@ -127,8 +127,8 @@ class SlicingTree:
 				tmp[one], tmp[second] = tmp[second], tmp[one]
 				postfixExpression = ''.join(tmp)
 				
-				if (not self.TestBallotingProperty(postfixExpression)):
-					print(postfixExpression)
+				print(postfixExpression)
+				return postfixExpression
 				#iter = re.finditer('(\w{1})([\-\|]{1})(\w{1})', postfixExpression)
 				#indices = [m.start(0) for m in iter]
 				#print(indices)
@@ -190,6 +190,7 @@ class SlicingTree:
 				elif (value =="0"):
 					RectRotation += "1"
 			print(RectRotation)
+			return BestCandidate
 			
 			
 			
@@ -219,7 +220,7 @@ class SlicingTree:
 						
 				
 		
-		def SwapMove(self, postfixExpression):
+		def SwapOperand(self, postfixExpression):
 				indexOperand = []
 				operator = ["-", "|"]
 				#print(postfixExpression)
@@ -252,14 +253,57 @@ class SlicingTree:
 				tmp[one], tmp[second] = tmp[second], tmp[one]
 				postfixExpression = ''.join(tmp)
 				
-				print(postfixExpression)
+				#print(postfixExpression)
+				return postfixExpression
 		
-		def StartFloorPlanSolver(self, prefixExpression):
+		def StartFloorPlanSolver(self):
 			self._dictionnary = {rect.getId(): (rect.getWidth(), rect.getHeight()) for rect in self._rectangles}
 			print(self._dictionnary)
-			postfix = self.PrefixToPostFix(prefixExpression)
+			postfix = generateInitialSolution()
 			print(postfix)
-			self.AreaComputation(postfix)
+			self.WongLiuFloorplanning(postfix)
+			#self.AreaComputation(postfix)
+			
+		def WongLiuFloorplanning(self,postfixExpression):
+			P = 0.90
+			K = 1000
+			r = 0.85
+			bestExpression = postfixExpression
+			previousExpression = postfixExpression
+			deltaAverage = self._ComputerUphillAverage()
+			temperature = -deltaAverage/log(P)
+			loop = True
+			while (loop):
+				reject = 0
+				for ite in range(0,K):
+					OperationChoice = random.randint(1,2)
+					if (OperationChoice == 1):
+						postfixExpression = self.SwapOperand(postfixExpression)
+					elif (OperationChoice == 2):
+						done = False
+						while(not done):
+							 tmp = postfixExpression
+							 tmp = SwapOperatorOperand(tmp)
+							 if(TestBallotingProperty(tmp)):
+								done = True
+								postfixExpression = tmp
+						
+							
+					else:
+						print("Erreur WongLiuFLoorplanning")
+					
+					deltaCost = self.AreaComputation(postfixExpression) - self.AreaComputation(previousExpression)
+					
+					if (deltaCost <= 0 or Random < e- deltaCost/Temperature):
+						previousExpression = postfixExpression
+						if self.AreaComputation(postfixExpression) < self.AreaComputation(bestExpression):
+							bestExpression = postfixExpression
+					else:
+						reject += 1
+				Temperature = r*Temperature
+				if (reject/K > 0.95 or Temperature < sigma):
+					loop = False
+				
 			
 			
 		# def SlicingPermutations(self):
@@ -305,7 +349,7 @@ teste.addRectangle(objets[2])
 teste.addRectangle(objets[3])
 teste.addRectangle(objets[4])
 
-teste.StartFloorPlanSolver("-|A-|CBDE")
+#teste.StartFloorPlanSolver("-|A-|CBDE")
 
 #teste.generateInitialSolution()
 #teste.TestBallotingProperty()
