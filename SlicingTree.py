@@ -274,27 +274,6 @@ class SlicingTree:
 				#print(postfixExpression)
 				return postfixExpression
 		
-		def StartFloorPlanSolver(self):
-			self._dictionnary = {rect.getId(): (rect.getWidth(), rect.getHeight()) for rect in self._rectangles}
-			print(self._dictionnary)
-			postfix = self.generateInitialSolution()
-			#bestExpression = self.WongLiuFloorplanning(postfix)
-			
-			allPerms = {}
-			for x in self.all_ALlowedPerms(postfix):
-				allPerms[x] = 0
-			
-			#prefixResult = self.PostfixToPrefix(bestExpression)
-			#print("Aire minimal " + str(self.AreaComputation(bestExpression)))
-			#print("Postfix " + bestExpression)
-			#print("Prefix " + prefixResult)
-			#print(self.AreaComputation(self.PrefixToPostfix("-|F-|DEA|BC")))
-			#answer = self.PrefixToPostfix("|-F|-DEA-CB")
-
-			#if answer in allPerms:
-			print(len(allPerms))
-			#for key, value in allPerms:
-				#print (key)
 		
 		def ComputeUphillAverage(self, postfixExpression, K = 20):
 			previousExpression = postfixExpression
@@ -324,11 +303,13 @@ class SlicingTree:
 		def ChildParentOperatorTest(self, postfixExpression):
 			operator = ["-", "|"]
 			prefix = self.PostfixToPrefix(postfixExpression)
+			op = []
 			for x in range(0, len(prefix)):
-				currentChar = prefix[x]
-				if (currentChar in operator):
-					if (len(prefix) > x+1 and currentChar == prefix[x+1]):
-						return False
+				if (prefix[x] in operator):
+					op.append(prefix[x])
+			for x in range(0, len(op)):
+				if (len(op) > x+1 and op[x] == op[x+1]):
+					return False
 			return True
 			
 			
@@ -371,8 +352,8 @@ class SlicingTree:
 						reject += 1
 				temperature = r*temperature
 				print("Computing...")
-				#if (reject/K > 0.95 or temperature < sigma):
-					#loop = False
+				if (reject/K > 0.95 or temperature < sigma):
+					loop = False
 			return bestExpression
 			
 		# def SlicingPermutations(self):
@@ -412,8 +393,34 @@ class SlicingTree:
 										tmp =  perm[:i] + elements[0:1] + perm[i:]
 										if self.TestBallotingProperty(tmp) and self.ChildParentOperatorTest(tmp):
 											yield tmp
+											
+											
+		def StartFloorPlanSolver(self):
+			self._dictionnary = {rect.getId(): (rect.getWidth(), rect.getHeight()) for rect in self._rectangles}
+			print(self._dictionnary)
+			postfix = self.generateInitialSolution()
+			#bestExpression = self.WongLiuFloorplanning(postfix)
+			
+			allPerms = {}
+			for x in self.all_ALlowedPerms(postfix):
+				allPerms[self.AreaComputation(x)] = x
+			
+			#prefixResult = self.PostfixToPrefix(bestExpression)
+			#print("Aire minimal " + str(self.AreaComputation(bestExpression)))
+			#print("Postfix " + bestExpression)
+			#print("Prefix " + prefixResult)
+			#print(self.AreaComputation(self.PrefixToPostfix("-|F-|DEA|BC")))
+			#answer = self.PrefixToPostfix("|-F|-DEA-CB")
+
+			#if answer in allPerms:
+			#print(len(allPerms))
 				
-				
+			ordered = OrderedDict(sorted(allPerms.items(), key=lambda t: t[0]))
+			while(len(ordered) != 0):
+				key, value = ordered.popitem(False)
+				print("Aire : " + str(key) + " ;" + " Postfix : " + value)
+			#print(self.ChildParentOperatorTest("BD|EFCA--|-"))
+						
 objets = []
 objets.append(("A", 2, 37))
 objets.append(("B", 31, 3))
@@ -427,7 +434,6 @@ objets.append(("F", 17, 13))
 # objets.append(("C", 5, 19))
 # objets.append(("D", 17, 7))
 # objets.append(("E", 11, 13))
-
 
 teste = SlicingTree()
 teste.addRectangle(objets[0])
