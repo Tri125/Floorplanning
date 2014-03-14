@@ -34,9 +34,9 @@ class SlicingTree:
 				return listExpression
 				
 				
-		def InfixToPostFix(self, infixExpression):
+		def InfixToPostfix(self, infixExpression):
 				stackyStack = ArrayStack()
-				operator = ["-", "|"]
+				operator = ["-", "|", "+"]
 				stringPostfix = ""
 				
 				for character in infixExpression:
@@ -53,6 +53,21 @@ class SlicingTree:
 						stringPostfix += stackyStack.pop()              
 						
 				return stringPostfix
+				
+		def PostfixToInfix(self, postfixExpression):
+			stack = ArrayStack()
+			operator = ["-", "|"]
+			stringInfix = ""
+			for x in range (0, len(postfixExpression)):
+				if postfixExpression[x] not in operator:
+					stack.push(postfixExpression[x])
+				else:
+					op1 = stack.pop()
+					op2 = stack.pop()
+					stack.push(op1 + postfixExpression[x] + op2)
+			while not stack.is_empty():
+				stringInfix += stack.pop()
+			return stringInfix
 				
 		def PrefixToPostfix(self, prefixExpression):
 			stack = ArrayStack()
@@ -114,7 +129,7 @@ class SlicingTree:
 				listInfixExpression = self.generateInfix(stringOperand, listOperator)
 				
 				for expression in listInfixExpression:
-						listPostfixExpression.append(self.InfixToPostFix(expression))
+						listPostfixExpression.append(self.InfixToPostfix(expression))
 						
 				
 				print(listOperator)
@@ -302,18 +317,20 @@ class SlicingTree:
 			
 		def ChildParentOperatorTest(self, postfixExpression):
 			operator = ["-", "|"]
-			prefix = self.PostfixToPrefix(postfixExpression)
-			op = []
-			for x in range(0, len(prefix)):
-				if (prefix[x] in operator):
-					op.append(prefix[x])
-			for x in range(0, len(op)):
-				if (len(op) > x+1 and op[x] == op[x+1]):
-					return False
+			stack = ArrayStack()
+			for x in range(0, len(postfixExpression)):
+				if postfixExpression[x] not in operator:
+					stack.push(postfixExpression[x])
+				else:
+					op2 = stack.pop()
+					op1 = stack.pop()
+					if op1[-1] == postfixExpression[x] or op2[-1] == postfixExpression[x]:
+						return False
+					stack.push(op1 + op2 + postfixExpression[x])
 			return True
 			
 			
-		def WongLiuFloorplanning(self, postfixExpression, P = 0.70, sigma = 1, r = 0.85, K = 100):
+		def WongLiuFloorplanning(self, postfixExpression, P = 0.80, sigma = 1, r = 0.85, K = 100):
 			bestExpression = postfixExpression
 			previousExpression = postfixExpression
 			deltaAverage = self.ComputeUphillAverage(postfixExpression,K)
@@ -383,7 +400,7 @@ class SlicingTree:
 										
 										
 										
-		def all_ALlowedPerms(self, elements):
+		def all_AllowedPerms(self, elements):
 				if len(elements) <=1:
 						yield elements
 				else:
@@ -397,29 +414,25 @@ class SlicingTree:
 											
 		def StartFloorPlanSolver(self):
 			self._dictionnary = {rect.getId(): (rect.getWidth(), rect.getHeight()) for rect in self._rectangles}
-			print(self._dictionnary)
 			postfix = self.generateInitialSolution()
 			#bestExpression = self.WongLiuFloorplanning(postfix)
+			bestArea = -1
+			dictReponse = {}
 			
-			allPerms = {}
-			for x in self.all_ALlowedPerms(postfix):
-				allPerms[self.AreaComputation(x)] = x
-			
-			#prefixResult = self.PostfixToPrefix(bestExpression)
-			#print("Aire minimal " + str(self.AreaComputation(bestExpression)))
-			#print("Postfix " + bestExpression)
-			#print("Prefix " + prefixResult)
-			#print(self.AreaComputation(self.PrefixToPostfix("-|F-|DEA|BC")))
-			#answer = self.PrefixToPostfix("|-F|-DEA-CB")
-
-			#if answer in allPerms:
-			#print(len(allPerms))
+			for x in self.all_AllowedPerms(postfix):
+				area = self.AreaComputation(x)
+				if (area < bestArea):
+					dictReponse = {}
+				if (bestArea is -1 or area <= bestArea):
+					dictReponse[x] = area
+			print(dictReponse)
 				
-			ordered = OrderedDict(sorted(allPerms.items(), key=lambda t: t[0]))
-			while(len(ordered) != 0):
-				key, value = ordered.popitem(False)
-				print("Aire : " + str(key) + " ;" + " Postfix : " + value)
-			#print(self.ChildParentOperatorTest("BD|EFCA--|-"))
+			#ordered = OrderedDict(sorted(allPerms.items(), key=lambda t: t[0]))
+			#while(len(ordered) != 0):
+				#key, value = ordered.popitem(False)
+				#print("Aire : " + str(key) + " ;" + " Postfix : " + value)
+
+			
 						
 objets = []
 objets.append(("A", 2, 37))
