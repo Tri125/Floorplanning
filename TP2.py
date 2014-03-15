@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # encoding: utf-8
+from SlicingTree import SlicingTree
 """
 TP2.py
 
@@ -14,12 +15,15 @@ import unittest
 
 
 def main(objets):
-    
-    arbres = []
-    
-    #TODO
-    
-    return arbres
+	
+	arbres = []
+	
+	myTree = SlicingTree()
+	for x in objets:
+		myTree.addRectangle(x)
+	arbres = myTree.StartFloorPlanSolver()
+	
+	return arbres
 
 
 

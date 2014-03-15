@@ -1,4 +1,3 @@
-from SlicingNode import SlicingNode
 from Rectangle import Rectangle
 from ArrayStack import ArrayStack
 from collections import OrderedDict
@@ -72,7 +71,6 @@ class SlicingTree:
 		def PrefixToPostfix(self, prefixExpression):
 			stack = ArrayStack()
 			operator = ["-", "|"]
-			#operator = ["+", "-"]
 			stringPostfix = ""
 			prefixExpression = prefixExpression[::-1]
 			for x in range(0, len(prefixExpression)):
@@ -90,7 +88,6 @@ class SlicingTree:
 		def PostfixToPrefix(self, postfixExpression):
 			stack = ArrayStack()
 			operator = ["-", "|"]
-			#operator = ["+", "-"]
 			stringPrefix = ""
 			for x in range(0, len(postfixExpression)):
 				if (postfixExpression[x] in operator):
@@ -132,13 +129,12 @@ class SlicingTree:
 						listPostfixExpression.append(self.InfixToPostfix(expression))
 						
 				
-				print(listOperator)
-				print(stringOperand)
-				print(listInfixExpression)
-				print(listPostfixExpression)
+				#print(listOperator)
+				#print(stringOperand)
+				#print(listInfixExpression)
+				#print(listPostfixExpression)
 				
-				#Parce que le deuxieme dans la liste est avec les operateurs inverse
-				return listPostfixExpression[0]
+				return listPostfixExpression
 		
 		
 		def SwapOperatorOperand(self, postfixExpression):
@@ -223,7 +219,7 @@ class SlicingTree:
 				elif (value =="0"):
 					RectRotation += "1"
 			#print(RectRotation)
-			return BestCandidate
+			return RectRotation, BestCandidate
 			
 			
 			
@@ -373,20 +369,6 @@ class SlicingTree:
 					loop = False
 			return bestExpression
 			
-		# def SlicingPermutations(self):
-				# operand = ""
-				# permutations = []
-								
-				# for x in self._rectangles:
-						# operand += x.getId()
-
-				# for x in self.all_perms(operand):
-						# permutations.append(x)
-				# listOperatorPerm = self.operator_perms(len(self._rectangles)-1)
-				# listInfixExpression = self.generateInfix(permutations, listOperatorPerm)
-				
-				# for x in listInfixExpression:
-						# print(x)
 				
 		#http://code.activestate.com/recipes/252178/    
 		def all_perms(self, elements):
@@ -418,50 +400,51 @@ class SlicingTree:
 			#bestExpression = self.WongLiuFloorplanning(postfix)
 			bestArea = -1
 			dictReponse = {}
+			reponse = []
 			
-			for x in self.all_AllowedPerms(postfix):
-				area = self.AreaComputation(x)
-				if (area < bestArea):
-					dictReponse = {}
-				if (bestArea is -1 or area <= bestArea):
-					dictReponse[x] = area
-			print(dictReponse)
-				
+			for x in self.all_AllowedPerms(postfix[0]):
+				rotation, area = self.AreaComputation(x)
+				if (bestArea is -1 or area < bestArea):
+					dictReponse.clear()
+					bestArea = area
+				if (area == bestArea):
+					dictReponse[area] = rotation + ":" + self.PostfixToPrefixParenthese(x) + ":" + str(area)
+			for key, value in dictReponse.items():
+				reponse.append(value)
+			bestArea = -1
+			dictReponse.clear()
+					
+			for x in self.all_AllowedPerms(postfix[1]):
+				rotation, area = self.AreaComputation(x)
+				if (bestArea is -1 or area < bestArea):
+					dictReponse.clear()
+					bestArea = area
+				if (area == bestArea):
+					dictReponse[area] = rotation + ":" + self.PostfixToPrefixParenthese(x) + ":" + str(area)
+			
+			for key, value in dictReponse.items():
+				reponse.append(value)
+			print(reponse)
 			#ordered = OrderedDict(sorted(allPerms.items(), key=lambda t: t[0]))
 			#while(len(ordered) != 0):
 				#key, value = ordered.popitem(False)
 				#print("Aire : " + str(key) + " ;" + " Postfix : " + value)
-
-			
-						
-objets = []
-objets.append(("A", 2, 37))
-objets.append(("B", 31, 3))
-objets.append(("C", 5, 29))
-objets.append(("D", 23, 7))
-objets.append(("E", 11, 19))
-objets.append(("F", 17, 13))
-
-# objets.append(("A", 2, 29))
-# objets.append(("B", 23, 3))
-# objets.append(("C", 5, 19))
-# objets.append(("D", 17, 7))
-# objets.append(("E", 11, 13))
-
-teste = SlicingTree()
-teste.addRectangle(objets[0])
-teste.addRectangle(objets[1])
-teste.addRectangle(objets[2])
-teste.addRectangle(objets[3])
-teste.addRectangle(objets[4])
-teste.addRectangle(objets[5])
-#print(teste.ChildParentOperatorTest("DBC-|F-T-"))
-teste.StartFloorPlanSolver()
-
-
 	
-
-
-#teste.TestBallotingProperty()
+			return reponse
+				
+		def PostfixToPrefixParenthese(self, postfixExpression):
+			stack = ArrayStack()
+			operator = ["-", "|"]
+			stringPrefix = ""
+			for x in range(0, len(postfixExpression)):
+				if (postfixExpression[x] in operator):
+					second = stack.pop()
+					one = stack.pop()
+					stack.push("(" + postfixExpression[x] + "," + one + "," + second + ")")
+				else:
+					stack.push(postfixExpression[x])
+			while (not stack.is_empty()):
+						stringPrefix += stack.pop()
+			return stringPrefix
 	
 				
