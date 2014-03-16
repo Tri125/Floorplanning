@@ -4,13 +4,15 @@ from collections import OrderedDict
 import random
 import math
 
+
+operator = ["-", "|"]
+
 class SlicingTree:
 		def __init__(self):
 				self._root = None
 				self._rectangles = []
 				self._permutations = []
 				self._dictionnary = {}
-				
 		def addRectangle(self, rect):
 				id, width, height = rect
 				rect = Rectangle(id, width, height)
@@ -35,7 +37,6 @@ class SlicingTree:
 				
 		def InfixToPostfix(self, infixExpression):
 				stackyStack = ArrayStack()
-				operator = ["-", "|", "+"]
 				stringPostfix = ""
 				
 				for character in infixExpression:
@@ -55,7 +56,6 @@ class SlicingTree:
 				
 		def PostfixToInfix(self, postfixExpression):
 			stack = ArrayStack()
-			operator = ["-", "|"]
 			stringInfix = ""
 			for x in range (0, len(postfixExpression)):
 				if postfixExpression[x] not in operator:
@@ -70,7 +70,6 @@ class SlicingTree:
 				
 		def PrefixToPostfix(self, prefixExpression):
 			stack = ArrayStack()
-			operator = ["-", "|"]
 			stringPostfix = ""
 			prefixExpression = prefixExpression[::-1]
 			for x in range(0, len(prefixExpression)):
@@ -87,7 +86,6 @@ class SlicingTree:
 			
 		def PostfixToPrefix(self, postfixExpression):
 			stack = ArrayStack()
-			operator = ["-", "|"]
 			stringPrefix = ""
 			for x in range(0, len(postfixExpression)):
 				if (postfixExpression[x] in operator):
@@ -101,7 +99,6 @@ class SlicingTree:
 			return stringPrefix
 		
 		def operatorGeneration(self, nbOperator):
-				operator = ["-", "|"]
 				listOperator = []
 				listOperatorReverse = []
 				listOperatorPerm = []
@@ -139,7 +136,6 @@ class SlicingTree:
 		
 		def SwapOperatorOperand(self, postfixExpression):
 				indexOperand = []
-				operator = ["-", "|"]
 				swapList = []
 				#print(postfixExpression)
 				for x in range(0, len(postfixExpression)):
@@ -165,8 +161,6 @@ class SlicingTree:
 
 		def AreaComputation(self, postfixExpression):
 			stacky = ArrayStack()
-			#operator = ["V","H"]
-			operator = ["-", "|"]
 			BestCandidate = 0
 			RealDict = {}
 			RealNote = ""
@@ -224,8 +218,6 @@ class SlicingTree:
 			
 			
 		def TestBallotingProperty(self, postfix):
-				operator = ["-", "|"]
-				#operator = ["H", "V"]
 				nbOperand = [0]*len(postfix)
 				nbOperator = [0]*len(postfix)
 				OperandCounter = 0
@@ -251,7 +243,6 @@ class SlicingTree:
 		
 		def SwapOperand(self, postfixExpression):
 				indexOperand = []
-				operator = ["-", "|"]
 				#print(postfixExpression)
 				for x in range (0,len(postfixExpression)):
 						if (postfixExpression[x] not in operator):
@@ -312,7 +303,6 @@ class SlicingTree:
 			return deltaAverage
 			
 		def ChildParentOperatorTest(self, postfixExpression):
-			operator = ["-", "|"]
 			stack = ArrayStack()
 			for x in range(0, len(postfixExpression)):
 				if postfixExpression[x] not in operator:
@@ -424,7 +414,6 @@ class SlicingTree:
 			
 			for key, value in dictReponse.items():
 				reponse.append(value)
-			print(reponse)
 			#ordered = OrderedDict(sorted(allPerms.items(), key=lambda t: t[0]))
 			#while(len(ordered) != 0):
 				#key, value = ordered.popitem(False)
@@ -434,7 +423,6 @@ class SlicingTree:
 				
 		def PostfixToPrefixParenthese(self, postfixExpression):
 			stack = ArrayStack()
-			operator = ["-", "|"]
 			stringPrefix = ""
 			for x in range(0, len(postfixExpression)):
 				if (postfixExpression[x] in operator):
