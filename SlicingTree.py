@@ -1,3 +1,4 @@
+# encoding: utf-8
 from Rectangle import Rectangle
 from ArrayStack import ArrayStack
 from collections import OrderedDict

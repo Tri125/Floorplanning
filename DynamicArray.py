@@ -1,3 +1,4 @@
+# encoding: utf-8
 """Programme pour le cours IFT2015
    Écrit par François Major le 9 février 2014.
 """
