@@ -1,6 +1,6 @@
-IFT-2015-TP2
+Calcul d'un plan de découpage optimale
 ============
-
+Projet IFT-2015-TP2
 Calcul d'un plan de découpage optimale (aire minimale) représenté par une structure d'arbre binaire.
 
 Dans ma solution ce trouve également l'implémentation d'un algorithme qui fait l'approximation d'un plan
